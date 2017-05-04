@@ -1,0 +1,36 @@
+##### README FOR XPR-FS #####
+### Author : Jiang Jiaqiu ###
+##### Date : 2016-05-29 #####
+
+XPRFS测试说明：
+
+本内核模块仅适用于基于Linux 2.6.32内核的Linux发行版。本测试文件系统基于ext2及minix文件系统修改，仅支持文件夹和文件的创建、修改、删除、链接功能。源代码在Ubuntu 10.04 LTS系统中编译通过。
+
+本文件夹内有xprfs与mkxprfs两个文件夹，其程序分别为：
+xprfs：XPR文件系统内核模块源代码
+mkxprfs：XPR文件系统格式化程序
+
+每个文件夹内均写好Makefile，详细说明如下
+make [default] : 只编译，不安装（默认）
+make install : 编译并安装
+make uninstall : 卸载并删除编译的文件
+make clean : 删除编译的文件
+
+编译安装步骤如下：
+1.在Shell中输入命令"uname -r"，确定内核版本为2.6.32;
+2.安装LinuxHeaders："apt-get install linux-headers-2.6.32";
+3.进入xprfs文件夹，执行编译命令"make"，然后加载内核模块，或者直接执行"make install";
+4.进入mkxprfs文件夹，编译安装格式化程序"make install"
+5.至此编译安装部分已完成
+
+测试步骤如下：
+1.新建一空白磁盘文件用于模拟块设备，这里大小设为10MB
+"dd if=/dev/zero of=~/xprfs-disk.img bs=1000k count=10"
+2.将文件与循环设备(loop0-loop7)链接，这里选择loop0
+"losetup /dev/loop0 ~/xprfs-disk.img"
+3.格式化块设备(这里为loop0)为xprfs格式
+"mkfs -t xprfs /dev/loop0"
+4.挂载/dev/loop0到任意挂载点，这里选择/mnt/xpr
+"mkdir /mnt/xpr ; mount -t xprfs /dev/loop0 /mnt/xpr"
+5.进入挂在XPRFS的目录，测试各项指令
+"cd /mnt/xpr"
